@@ -1,7 +1,7 @@
 name: Sync
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Cho phép chạy thủ công
   push:
     branches:
       - main
@@ -18,15 +18,17 @@ jobs:
         run: |
           git remote add source https://github.com/htlabs-xyz/htlabs.git
           git fetch source
-          git checkout source/main -- .
-        
+          git checkout source/main -- . # Chỉ pull nội dung từ nhánh main của htlabs
+
       - name: Commit changes
         run: |
-          git config --local user.email "tiendung0325@gmail.com"
-          git config --local user.name "tidvn"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Pulled changes from htlabs-xyz/htlabs"
+          git commit -m "Pulled changes from htlabs-xyz/htlabs" || echo "No changes to commit"
         
       - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push origin main
