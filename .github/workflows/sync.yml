@@ -1,0 +1,32 @@
+name: Sync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  pull-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Pull from remote repository
+        run: |
+          git remote add source https://github.com/htlabs-xyz/htlabs.git
+          git fetch source
+          git checkout source/main -- .
+        
+      - name: Commit changes
+        run: |
+          git config --local user.email "tiendung0325@gmail.com"
+          git config --local user.name "tidvn"
+          git add .
+          git commit -m "Pulled changes from htlabs-xyz/htlabs"
+        
+      - name: Push changes
+        run: |
+          git push origin main
